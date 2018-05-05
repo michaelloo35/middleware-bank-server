@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class Bank {
 
     private static final Logger logger = Logger.getLogger(Bank.class);
-    private static final DecimalFormat df2 = new DecimalFormat(".##");
+    private static final DecimalFormat df2 = new DecimalFormat("#.##");
 
     private final ManagedChannel channel;
     private final CurrencyProviderGrpc.CurrencyProviderStub currencyProviderStub;
