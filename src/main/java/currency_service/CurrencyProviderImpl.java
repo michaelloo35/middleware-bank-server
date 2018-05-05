@@ -12,6 +12,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.*;
 
+//TODO inform about rates onConnect
 public class CurrencyProviderImpl extends CurrencyProviderGrpc.CurrencyProviderImplBase {
 
     private final static Logger logger = Logger.getLogger(CurrencyProviderImpl.class);
@@ -25,10 +26,10 @@ public class CurrencyProviderImpl extends CurrencyProviderGrpc.CurrencyProviderI
         exchangeRates.putIfAbsent(CurrencyType.USD, CurrencyConstants.USD_TO_PLN_BASE);
         exchangeRates.putIfAbsent(CurrencyType.PLN, CurrencyConstants.PLN_TO_PLN_BASE);
 
-
         for (CurrencyType currencyType : CurrencyType.values()) {
             banksByCurrencies.put(currencyType, new HashSet<>());
         }
+
         scheduler = Executors.newScheduledThreadPool(1);
         scheduler.schedule(this::notifyBanks, CurrencyConstants.UPDATE_PERIOD_SECONDS, TimeUnit.SECONDS);
         scheduler.schedule(this::simulateFluctuation, CurrencyConstants.FLUCTUATION_PERIOD_SECONDS, TimeUnit.SECONDS);
