@@ -31,8 +31,8 @@ public class CurrencyProviderImpl extends CurrencyProviderGrpc.CurrencyProviderI
         }
 
         scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.schedule(this::notifyBanks, CurrencyConstants.UPDATE_PERIOD_SECONDS, TimeUnit.SECONDS);
-        scheduler.schedule(this::simulateFluctuation, CurrencyConstants.FLUCTUATION_PERIOD_SECONDS, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::notifyBanks, 0, CurrencyConstants.UPDATE_PERIOD_SECONDS, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::simulateFluctuation, 0, CurrencyConstants.FLUCTUATION_PERIOD_SECONDS, TimeUnit.SECONDS);
     }
 
     @Override
@@ -59,6 +59,8 @@ public class CurrencyProviderImpl extends CurrencyProviderGrpc.CurrencyProviderI
 
 
     private void notifyBanks() {
+        logger.debug("Notifying banks..");
+
         banksByCurrencies
                 .keySet()
                 .forEach(currencyType -> banksByCurrencies
@@ -71,6 +73,7 @@ public class CurrencyProviderImpl extends CurrencyProviderGrpc.CurrencyProviderI
     }
 
     private void simulateFluctuation() {
+        logger.debug("Fluctuation began..");
         for (CurrencyType currencyType : CurrencyType.values()) {
 
             // simulate that some currencies may not change at all within given fluctuation

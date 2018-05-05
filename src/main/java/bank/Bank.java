@@ -10,12 +10,14 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import org.apache.log4j.Logger;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class Bank {
 
     private static final Logger logger = Logger.getLogger(Bank.class);
+    private static final DecimalFormat df2 = new DecimalFormat(".##");
 
     private final ManagedChannel channel;
     private final CurrencyProviderGrpc.CurrencyProviderStub currencyProviderStub;
@@ -41,7 +43,8 @@ public class Bank {
     }
 
     private void start() throws InterruptedException {
-
+        subscribeToCurrenciesService();
+        Thread.sleep(1000 * 120);
         shutdown();
     }
 
@@ -51,10 +54,11 @@ public class Bank {
 
     public void subscribeToCurrenciesService() {
 
-        currencyProviderStub.getExchangeRates(new StreamObserver<ExchangeRate>() {
+        StreamObserver<Currency> currencyStream = currencyProviderStub.getExchangeRates(new StreamObserver<ExchangeRate>() {
             @Override
             public void onNext(ExchangeRate exchangeRate) {
                 exchangeRates.put(exchangeRate.getCurrency(), exchangeRate.getRate());
+                printRate(exchangeRate);
             }
 
             @Override
@@ -68,11 +72,18 @@ public class Bank {
             }
         });
 
+        exchangeRates.keySet()
+                .stream()
+                .map(currencyType -> Currency.newBuilder()
+                        .setCurrency(currencyType)
+                        .build())
+                .forEach(currencyStream::onNext);
+
     }
 
-    private void printRates() {
-        exchangeRates.entrySet().forEach(System.out::println);
-        System.out.println("==================");
+
+    private void printRate(ExchangeRate exchangeRate) {
+        logger.info(exchangeRate.getCurrency() + " : " + df2.format(exchangeRate.getRate()));
     }
 
 }
