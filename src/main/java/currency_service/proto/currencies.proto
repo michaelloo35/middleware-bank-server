@@ -35,9 +35,9 @@ option java_outer_classname = "CurrencyProto";
 option objc_class_prefix = "CUR";
 
 
-
 service CurrencyProvider {
-    rpc getExchangeRates(stream Currency) returns (stream ExchangeRate) {}
+    rpc getExchangeRates (stream Currency) returns (stream ExchangeRate) {
+    }
 }
 message Currency {
     CurrencyType currency = 1;
@@ -51,6 +51,6 @@ enum CurrencyType {
 
 message ExchangeRate {
     CurrencyType currency = 1;
-    double rate =2;
+    double rate = 2;
 }
 
