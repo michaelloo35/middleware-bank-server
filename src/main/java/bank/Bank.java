@@ -1,7 +1,7 @@
 package bank;
 
 import currency_service.CurrencyConstants;
-import currency_service.proto.gen.Currency;
+import currency_service.proto.gen.Currencies;
 import currency_service.proto.gen.CurrencyProviderGrpc;
 import currency_service.proto.gen.CurrencyType;
 import currency_service.proto.gen.ExchangeRate;
@@ -54,30 +54,26 @@ public class Bank {
 
     public void subscribeToCurrenciesService() {
 
-        StreamObserver<Currency> currencyStream = currencyProviderStub.getExchangeRates(new StreamObserver<ExchangeRate>() {
-            @Override
-            public void onNext(ExchangeRate exchangeRate) {
-                exchangeRates.put(exchangeRate.getCurrency(), exchangeRate.getRate());
-                printRate(exchangeRate);
-            }
+        currencyProviderStub.getExchangeRates(
+                Currencies.newBuilder().addAllCurrency(exchangeRates.keySet()).build(),
+                new StreamObserver<ExchangeRate>() {
 
-            @Override
-            public void onError(Throwable throwable) {
-                logger.warn(throwable.getMessage());
-            }
+                    @Override
+                    public void onNext(ExchangeRate exchangeRate) {
+                        exchangeRates.put(exchangeRate.getCurrency(), exchangeRate.getRate());
+                        printRate(exchangeRate);
+                    }
 
-            @Override
-            public void onCompleted() {
-                logger.info("Stream completed");
-            }
-        });
+                    @Override
+                    public void onError(Throwable throwable) {
+                        logger.warn(throwable.getMessage());
+                    }
 
-        exchangeRates.keySet()
-                .stream()
-                .map(currencyType -> Currency.newBuilder()
-                        .setCurrency(currencyType)
-                        .build())
-                .forEach(currencyStream::onNext);
+                    @Override
+                    public void onCompleted() {
+                        logger.info("Stream completed");
+                    }
+                });
 
     }
 

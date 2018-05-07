@@ -36,11 +36,11 @@ option objc_class_prefix = "CUR";
 
 
 service CurrencyProvider {
-    rpc getExchangeRates (stream Currency) returns (stream ExchangeRate) {
+    rpc getExchangeRates (Currencies) returns (stream ExchangeRate) {
     }
 }
-message Currency {
-    CurrencyType currency = 1;
+message Currencies {
+    repeated CurrencyType currency = 1;
 }
 
 enum CurrencyType {
