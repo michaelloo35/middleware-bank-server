@@ -2,7 +2,7 @@
 #ifndef CALC_ICE
 #define CALC_ICE
 
-module BankClient
+module bank
 {
   enum AccountType {STANDARD = 0, PREMIUM = 1};
   enum CurrencyType {USD = 0,EUR = 1,PLN = 2};
@@ -14,33 +14,33 @@ module BankClient
   double actualCost;
   };
 
-   class Date{
+  class Date{
     byte day;
     byte month;
     short year;
-   };
+  };
 
   exception NotAuthrorizedException{
     string reason;
   };
-
   exception NoIncomeException{};
+  exception IllegalCurrencyException{};
   exception DateRangeError{
     string reason;
   };
 
   interface Account{
   double accountBalance();
-  void deposit(double value);
   };
 
   interface PremiumAccount extends Account{
-    CreditInfo applyForCredit(double value, CurrencyType currency, Date from, Date to ) throws NotAuthrorizedException,DateRangeError;
+    CreditInfo getCreditInfo(Date from, Date to, CurrencyType currency, double value ) throws NotAuthrorizedException,DateRangeError,IllegalCurrencyException;
   };
 
   interface AccountFactory{
-    Account* create(string firstName, string lastName, string pesel, double monthlyIncome) throws NoIncomeException;
+    Account* create(string firstName, string lastName, string pesel, double monthlyIncome,double balance) throws NoIncomeException;
   };
+
 
 };
 

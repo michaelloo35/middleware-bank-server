@@ -1,5 +1,10 @@
 package bank;
 
+import bank.account.AccountFactoryI;
+import com.zeroc.Ice.Communicator;
+import com.zeroc.Ice.Identity;
+import com.zeroc.Ice.ObjectAdapter;
+import com.zeroc.Ice.Util;
 import currency_service.CurrencyConstants;
 import currency_service.proto.gen.Currencies;
 import currency_service.proto.gen.CurrencyProviderGrpc;
@@ -43,9 +48,55 @@ public class Bank {
     }
 
     private void start() throws InterruptedException {
-        subscribeToCurrenciesService();
-        Thread.sleep(1000 * 120);
-        shutdown();
+
+        int status = 0;
+        Communicator communicator = null;
+
+        try {
+            // grpc part
+            subscribeToCurrenciesService();
+
+            // 1. Inicjalizacja ICE - utworzenie communicatora
+            communicator = Util.initialize();
+
+            // 2. Konfiguracja adaptera
+            // METODA 2 (niepolecana, dopuszczalna testowo): Konfiguracja adaptera Adapter1 jest w kodzie ?r?d?owym
+            ObjectAdapter objectAdapter = communicator.createObjectAdapterWithEndpoints("Adapter1", "tcp -h localhost -p 10000:udp -h localhost -p 10000");
+
+            // 3. Stworzenie serwanta/serwant?
+            AccountFactoryI accountFactoryServant = new AccountFactoryI(exchangeRates, objectAdapter);
+
+            // 4. Dodanie wpis?w do tablicy ASM
+            objectAdapter.add(accountFactoryServant, new Identity("accountFactory", "accountFactory"));
+
+
+            // 5. Aktywacja adaptera i przej?cie w p?tl? przetwarzania ??da?
+            objectAdapter.activate();
+
+            System.out.println("Entering event processing loop...");
+
+            communicator.waitForShutdown();
+
+
+        } catch (Exception e) {
+            System.err.println(e);
+            status = 1;
+        } finally {
+
+            if (communicator != null) {
+                // Clean up
+                try {
+                    communicator.destroy();
+                } catch (Exception e) {
+                    System.err.println(e);
+                    status = 1;
+                }
+            }
+            shutdown();
+            System.exit(status);
+        }
+
+
     }
 
     public void shutdown() throws InterruptedException {
