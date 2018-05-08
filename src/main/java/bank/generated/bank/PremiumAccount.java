@@ -22,7 +22,7 @@ package bank.generated.bank;
 
 public interface PremiumAccount extends Account
 {
-    CreditInfo getCreditInfo(Date from, Date to, CurrencyType currency, double value, com.zeroc.Ice.Current current)
+    CreditInfo getCreditInfo(String from, String to, CurrencyType currency, double value, com.zeroc.Ice.Current current)
         throws DateRangeError,
                IllegalCurrencyException,
                NotAuthrorizedException;
@@ -56,18 +56,15 @@ public interface PremiumAccount extends Account
     {
         com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
         com.zeroc.Ice.InputStream istr = inS.startReadParams();
-        final com.zeroc.IceInternal.Holder<Date> icePP_from = new com.zeroc.IceInternal.Holder<>();
-        final com.zeroc.IceInternal.Holder<Date> icePP_to = new com.zeroc.IceInternal.Holder<>();
+        String iceP_from;
+        String iceP_to;
         CurrencyType iceP_currency;
         double iceP_value;
-        istr.readValue(v -> icePP_from.value = v, Date.class);
-        istr.readValue(v -> icePP_to.value = v, Date.class);
+        iceP_from = istr.readString();
+        iceP_to = istr.readString();
         iceP_currency = CurrencyType.ice_read(istr);
         iceP_value = istr.readDouble();
-        istr.readPendingValues();
         inS.endReadParams();
-        Date iceP_from = icePP_from.value;
-        Date iceP_to = icePP_to.value;
         CreditInfo ret = obj.getCreditInfo(iceP_from, iceP_to, iceP_currency, iceP_value, current);
         com.zeroc.Ice.OutputStream ostr = inS.startWriteParams();
         ostr.writeValue(ret);

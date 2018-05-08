@@ -22,7 +22,7 @@ package bank.generated.bank;
 
 public interface PremiumAccountPrx extends AccountPrx
 {
-    default CreditInfo getCreditInfo(Date from, Date to, CurrencyType currency, double value)
+    default CreditInfo getCreditInfo(String from, String to, CurrencyType currency, double value)
         throws DateRangeError,
                IllegalCurrencyException,
                NotAuthrorizedException
@@ -30,7 +30,7 @@ public interface PremiumAccountPrx extends AccountPrx
         return getCreditInfo(from, to, currency, value, com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
-    default CreditInfo getCreditInfo(Date from, Date to, CurrencyType currency, double value, java.util.Map<String, String> context)
+    default CreditInfo getCreditInfo(String from, String to, CurrencyType currency, double value, java.util.Map<String, String> context)
         throws DateRangeError,
                IllegalCurrencyException,
                NotAuthrorizedException
@@ -57,25 +57,24 @@ public interface PremiumAccountPrx extends AccountPrx
         }
     }
 
-    default java.util.concurrent.CompletableFuture<CreditInfo> getCreditInfoAsync(Date from, Date to, CurrencyType currency, double value)
+    default java.util.concurrent.CompletableFuture<CreditInfo> getCreditInfoAsync(String from, String to, CurrencyType currency, double value)
     {
         return _iceI_getCreditInfoAsync(from, to, currency, value, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
     }
 
-    default java.util.concurrent.CompletableFuture<CreditInfo> getCreditInfoAsync(Date from, Date to, CurrencyType currency, double value, java.util.Map<String, String> context)
+    default java.util.concurrent.CompletableFuture<CreditInfo> getCreditInfoAsync(String from, String to, CurrencyType currency, double value, java.util.Map<String, String> context)
     {
         return _iceI_getCreditInfoAsync(from, to, currency, value, context, false);
     }
 
-    default com.zeroc.IceInternal.OutgoingAsync<CreditInfo> _iceI_getCreditInfoAsync(Date iceP_from, Date iceP_to, CurrencyType iceP_currency, double iceP_value, java.util.Map<String, String> context, boolean sync)
+    default com.zeroc.IceInternal.OutgoingAsync<CreditInfo> _iceI_getCreditInfoAsync(String iceP_from, String iceP_to, CurrencyType iceP_currency, double iceP_value, java.util.Map<String, String> context, boolean sync)
     {
         com.zeroc.IceInternal.OutgoingAsync<CreditInfo> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "getCreditInfo", null, sync, _iceE_getCreditInfo);
         f.invoke(true, context, null, ostr -> {
-                     ostr.writeValue(iceP_from);
-                     ostr.writeValue(iceP_to);
+                     ostr.writeString(iceP_from);
+                     ostr.writeString(iceP_to);
                      CurrencyType.ice_write(ostr, iceP_currency);
                      ostr.writeDouble(iceP_value);
-                     ostr.writePendingValues();
                  }, istr -> {
                      final com.zeroc.IceInternal.Holder<CreditInfo> ret = new com.zeroc.IceInternal.Holder<>();
                      istr.readValue(v -> ret.value = v, CreditInfo.class);

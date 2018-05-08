@@ -67,7 +67,7 @@ public class Bank {
             AccountFactoryI accountFactoryServant = new AccountFactoryI(exchangeRates, objectAdapter);
 
             // 4. Dodanie wpis?w do tablicy ASM
-            objectAdapter.add(accountFactoryServant, new Identity("accountFactory", "accountFactory"));
+            objectAdapter.add(accountFactoryServant, new Identity("accountFactory1", "accountFactory"));
 
 
             // 5. Aktywacja adaptera i przej?cie w p?tl? przetwarzania ??da?

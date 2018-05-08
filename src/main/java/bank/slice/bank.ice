@@ -4,7 +4,6 @@
 
 module bank
 {
-  enum AccountType {STANDARD = 0, PREMIUM = 1};
   enum CurrencyType {USD = 0,EUR = 1,PLN = 2};
 
   class CreditInfo{
@@ -12,12 +11,6 @@ module bank
   double baseCost;
   CurrencyType actualCreditCurrency;
   double actualCost;
-  };
-
-  class Date{
-    byte day;
-    byte month;
-    short year;
   };
 
   exception NotAuthrorizedException{
@@ -34,7 +27,7 @@ module bank
   };
 
   interface PremiumAccount extends Account{
-    CreditInfo getCreditInfo(Date from, Date to, CurrencyType currency, double value ) throws NotAuthrorizedException,DateRangeError,IllegalCurrencyException;
+    CreditInfo getCreditInfo(string from, string to, CurrencyType currency, double value ) throws NotAuthrorizedException,DateRangeError,IllegalCurrencyException;
   };
 
   interface AccountFactory{
