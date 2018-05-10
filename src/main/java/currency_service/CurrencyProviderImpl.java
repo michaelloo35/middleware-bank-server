@@ -31,7 +31,6 @@ public class CurrencyProviderImpl extends CurrencyProviderGrpc.CurrencyProviderI
         }
 
         scheduler = Executors.newScheduledThreadPool(1);
-//        scheduler.scheduleAtFixedRate(this::notifyBanks, 0, CurrencyConstants.UPDATE_PERIOD_SECONDS, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(this::simulateFluctuation, 0, CurrencyConstants.FLUCTUATION_PERIOD_SECONDS, TimeUnit.SECONDS);
     }
 
@@ -39,20 +38,6 @@ public class CurrencyProviderImpl extends CurrencyProviderGrpc.CurrencyProviderI
     @Override
     public void getExchangeRates(Currencies request, StreamObserver<ExchangeRate> responseObserver) {
         request.getCurrencyList().forEach(c -> banksByCurrencies.get(c).add(responseObserver));
-    }
-
-    private void notifyBanks() {
-        logger.debug("Notifying banks..");
-
-        banksByCurrencies
-                .keySet()
-                .forEach(currencyType -> banksByCurrencies
-                        .get(currencyType)
-                        .forEach(bank -> bank.onNext(ExchangeRate
-                                .newBuilder()
-                                .setCurrency(currencyType)
-                                .setRate(exchangeRates.get(currencyType))
-                                .build())));
     }
 
     private void simulateFluctuation() {
