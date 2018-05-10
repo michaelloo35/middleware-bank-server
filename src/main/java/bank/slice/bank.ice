@@ -13,9 +13,6 @@ module bank
   double actualCost;
   };
 
-  exception NotAuthrorizedException{
-    string reason;
-  };
   exception NoIncomeException{};
   exception IllegalCurrencyException{};
   exception DateRangeError{
@@ -27,11 +24,11 @@ module bank
   };
 
   interface PremiumAccount extends Account{
-    CreditInfo getCreditInfo(string from, string to, CurrencyType currency, double value ) throws NotAuthrorizedException,DateRangeError,IllegalCurrencyException;
+    CreditInfo getCreditInfo(string from, string to, CurrencyType currency, double value ) throws DateRangeError,IllegalCurrencyException;
   };
 
   interface AccountFactory{
-    Account* create(string firstName, string lastName, string pesel, double monthlyIncome,double balance) throws NoIncomeException;
+    Account* create(string firstName, string lastName, string pesel, double monthlyIncome,double balance) ;
   };
 
 

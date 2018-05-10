@@ -21,7 +21,7 @@ def account_create():
         monthly_income = float(monthly_income)
         initial_deposit = float(initial_deposit)
         return factory.create(first_name, last_name, pesel, monthly_income, initial_deposit)
-    except Ice.Exception:
+    except Ice.UnknownLocalException:
         print("Oops seems like your pesel number already exist in the system")
 
 

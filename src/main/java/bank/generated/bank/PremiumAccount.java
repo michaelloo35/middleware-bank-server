@@ -24,8 +24,7 @@ public interface PremiumAccount extends Account
 {
     CreditInfo getCreditInfo(String from, String to, CurrencyType currency, double value, com.zeroc.Ice.Current current)
         throws DateRangeError,
-               IllegalCurrencyException,
-               NotAuthrorizedException;
+               IllegalCurrencyException;
 
     static final String[] _iceIds =
     {

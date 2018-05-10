@@ -2,7 +2,6 @@ package bank.account;
 
 import bank.generated.bank.AccountFactory;
 import bank.generated.bank.AccountPrx;
-import bank.generated.bank.NoIncomeException;
 import bank.generated.bank.PremiumAccountPrx;
 import com.zeroc.Ice.Current;
 import com.zeroc.Ice.Identity;
@@ -23,7 +22,7 @@ public class AccountFactoryI implements AccountFactory {
     }
 
     @Override
-    public AccountPrx create(String firstName, String lastName, String pesel, double monthlyIncome, double balance, Current current) throws NoIncomeException {
+    public AccountPrx create(String firstName, String lastName, String pesel, double monthlyIncome, double balance, Current current) {
 
         if (monthlyIncome > HIGHEST_BASIC_INCOME)
             return PremiumAccountPrx.uncheckedCast(objectAdapter.add(

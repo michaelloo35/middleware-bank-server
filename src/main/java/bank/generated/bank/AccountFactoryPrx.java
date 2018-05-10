@@ -23,26 +23,13 @@ package bank.generated.bank;
 public interface AccountFactoryPrx extends com.zeroc.Ice.ObjectPrx
 {
     default AccountPrx create(String firstName, String lastName, String pesel, double monthlyIncome, double balance)
-        throws NoIncomeException
     {
         return create(firstName, lastName, pesel, monthlyIncome, balance, com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
     default AccountPrx create(String firstName, String lastName, String pesel, double monthlyIncome, double balance, java.util.Map<String, String> context)
-        throws NoIncomeException
     {
-        try
-        {
-            return _iceI_createAsync(firstName, lastName, pesel, monthlyIncome, balance, context, true).waitForResponseOrUserEx();
-        }
-        catch(NoIncomeException ex)
-        {
-            throw ex;
-        }
-        catch(com.zeroc.Ice.UserException ex)
-        {
-            throw new com.zeroc.Ice.UnknownUserException(ex.ice_id(), ex);
-        }
+        return _iceI_createAsync(firstName, lastName, pesel, monthlyIncome, balance, context, true).waitForResponse();
     }
 
     default java.util.concurrent.CompletableFuture<AccountPrx> createAsync(String firstName, String lastName, String pesel, double monthlyIncome, double balance)
@@ -57,7 +44,7 @@ public interface AccountFactoryPrx extends com.zeroc.Ice.ObjectPrx
 
     default com.zeroc.IceInternal.OutgoingAsync<AccountPrx> _iceI_createAsync(String iceP_firstName, String iceP_lastName, String iceP_pesel, double iceP_monthlyIncome, double iceP_balance, java.util.Map<String, String> context, boolean sync)
     {
-        com.zeroc.IceInternal.OutgoingAsync<AccountPrx> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "create", null, sync, _iceE_create);
+        com.zeroc.IceInternal.OutgoingAsync<AccountPrx> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "create", null, sync, null);
         f.invoke(true, context, null, ostr -> {
                      ostr.writeString(iceP_firstName);
                      ostr.writeString(iceP_lastName);
@@ -71,11 +58,6 @@ public interface AccountFactoryPrx extends com.zeroc.Ice.ObjectPrx
                  });
         return f;
     }
-
-    static final Class<?>[] _iceE_create =
-    {
-        NoIncomeException.class
-    };
 
     /**
      * Contacts the remote server to verify that the object implements this type.

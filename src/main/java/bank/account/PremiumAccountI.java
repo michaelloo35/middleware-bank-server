@@ -24,7 +24,7 @@ public class PremiumAccountI extends AccountI implements PremiumAccount {
 
 
     @Override
-    public CreditInfo getCreditInfo(String from, String to, CurrencyType currency, double value, Current current) throws DateRangeError, IllegalCurrencyException, NotAuthrorizedException {
+    public CreditInfo getCreditInfo(String from, String to, CurrencyType currency, double value, Current current) throws DateRangeError, IllegalCurrencyException{
 
         checkDate(from, to);
 

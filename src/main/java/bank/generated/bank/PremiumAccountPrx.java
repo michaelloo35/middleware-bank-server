@@ -24,16 +24,14 @@ public interface PremiumAccountPrx extends AccountPrx
 {
     default CreditInfo getCreditInfo(String from, String to, CurrencyType currency, double value)
         throws DateRangeError,
-               IllegalCurrencyException,
-               NotAuthrorizedException
+               IllegalCurrencyException
     {
         return getCreditInfo(from, to, currency, value, com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
     default CreditInfo getCreditInfo(String from, String to, CurrencyType currency, double value, java.util.Map<String, String> context)
         throws DateRangeError,
-               IllegalCurrencyException,
-               NotAuthrorizedException
+               IllegalCurrencyException
     {
         try
         {
@@ -44,10 +42,6 @@ public interface PremiumAccountPrx extends AccountPrx
             throw ex;
         }
         catch(IllegalCurrencyException ex)
-        {
-            throw ex;
-        }
-        catch(NotAuthrorizedException ex)
         {
             throw ex;
         }
@@ -87,8 +81,7 @@ public interface PremiumAccountPrx extends AccountPrx
     static final Class<?>[] _iceE_getCreditInfo =
     {
         DateRangeError.class,
-        IllegalCurrencyException.class,
-        NotAuthrorizedException.class
+        IllegalCurrencyException.class
     };
 
     /**
