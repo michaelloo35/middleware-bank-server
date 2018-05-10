@@ -26,15 +26,19 @@ def account_create():
 
 
 def account_login():
-    global pesel, obj, account
-    pesel = input("specify your pesel number\n")
-    obj = communicator.stringToProxy("account/" + pesel + ":tcp -h localhost -p 10000:udp -h localhost -p 10000")
-    return bank.AccountPrx.checkedCast(obj)
+    try:
+        global pesel, obj, account
+        pesel = input("specify your pesel number\n")
+        obj = communicator.stringToProxy("account/" + pesel + ":tcp -h localhost -p 10001:udp -h localhost -p 10001")
+        return bank.AccountPrx.checkedCast(obj)
+
+    except Ice.Exception:
+        print("User not existing")
 
 
 with Ice.initialize(sys.argv) as communicator:
     base = communicator.stringToProxy(
-        "accountFactory/accountFactory1:tcp -h localhost -p 10000:udp -h localhost -p 10000")
+        "accountFactory/accountFactory1:tcp -h localhost -p 10001:udp -h localhost -p 10001")
     factory = bank.AccountFactoryPrx.checkedCast(base)
 
     user_input = input("create to create account \nlogin to login\n")
@@ -79,3 +83,9 @@ with Ice.initialize(sys.argv) as communicator:
 
             except Ice.OperationNotExistException:
                 print("Oops it seems like you don't qualify for premium account service")
+            except bank.DateRangeError:
+                print("End date should be after begin date")
+            except bank.IllegalCurrencyException:
+                print("This bank does not offer credit in specified currency")
+
+

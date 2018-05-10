@@ -7,7 +7,6 @@ import currency_service.proto.gen.ExchangeRate;
 import io.grpc.stub.StreamObserver;
 import org.apache.log4j.Logger;
 
-import java.util.Currency;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -32,7 +31,7 @@ public class CurrencyProviderImpl extends CurrencyProviderGrpc.CurrencyProviderI
         }
 
         scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(this::notifyBanks, 0, CurrencyConstants.UPDATE_PERIOD_SECONDS, TimeUnit.SECONDS);
+//        scheduler.scheduleAtFixedRate(this::notifyBanks, 0, CurrencyConstants.UPDATE_PERIOD_SECONDS, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(this::simulateFluctuation, 0, CurrencyConstants.FLUCTUATION_PERIOD_SECONDS, TimeUnit.SECONDS);
     }
 
@@ -65,6 +64,15 @@ public class CurrencyProviderImpl extends CurrencyProviderGrpc.CurrencyProviderI
                 // program flow should not allow missing values since they are assigned in constructor just in case set default to negative value to indicate error
                 double fluctuation = exchangeRates.getOrDefault(currencyType, -1.0) * ((new Random().nextDouble() / 2.0) + 0.75);
                 exchangeRates.replace(currencyType, fluctuation);
+
+                banksByCurrencies
+                        .get(currencyType)
+                        .forEach(bank -> bank.onNext(ExchangeRate
+                                .newBuilder()
+                                .setCurrency(currencyType)
+                                .setRate(exchangeRates.get(currencyType))
+                                .build()));
+
             }
         }
     }

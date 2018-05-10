@@ -38,7 +38,7 @@ public class Bank {
         currencyProviderStub = CurrencyProviderGrpc.newStub(channel);
         //TODO to delete
         exchangeRates.put(CurrencyType.PLN, CurrencyConstants.PLN_TO_PLN_BASE);
-        exchangeRates.put(CurrencyType.EUR, CurrencyConstants.EUR_TO_PLN_BASE);
+        exchangeRates.put(CurrencyType.USD, CurrencyConstants.USD_TO_PLN_BASE);
 
     }
 
@@ -61,7 +61,7 @@ public class Bank {
 
             // 2. Konfiguracja adaptera
             // METODA 2 (niepolecana, dopuszczalna testowo): Konfiguracja adaptera Adapter1 jest w kodzie ?r?d?owym
-            ObjectAdapter objectAdapter = communicator.createObjectAdapterWithEndpoints("Adapter1", "tcp -h localhost -p 10000:udp -h localhost -p 10000");
+            ObjectAdapter objectAdapter = communicator.createObjectAdapterWithEndpoints("Adapter1", "tcp -h localhost -p 10001:udp -h localhost -p 10001");
 
             // 3. Stworzenie serwanta/serwant?
             AccountFactoryI accountFactoryServant = new AccountFactoryI(exchangeRates, objectAdapter);
